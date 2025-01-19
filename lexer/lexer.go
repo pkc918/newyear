@@ -59,6 +59,10 @@ func (l *Lexer) NextToken() token.Token {
 			tok.Literal = l.readIdentifier()
 			tok.Type = token.LookupIdent(tok.Literal)
 			return tok
+		} else if isDigit(l.ch) {
+			tok.Literal = l.readNumber()
+			tok.Type = token.INT
+			return tok
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
 		}
@@ -79,6 +83,15 @@ func (l *Lexer) skipWhitespace() {
 	}
 }
 
+// isLetter 判断是否是字母
+func isLetter(ch byte) bool {
+	matched, err := regexp.Match(`^[a-zA-Z_]+`, []byte(string(ch)))
+	if err != nil {
+		panic(err)
+	}
+	return matched
+}
+
 // readIdentifier 从一个有效token开始读取到一个分隔符之前，代表了一个单元
 func (l *Lexer) readIdentifier() string {
 	position := l.position
@@ -88,10 +101,20 @@ func (l *Lexer) readIdentifier() string {
 	return l.input[position:l.position]
 }
 
-func isLetter(ch byte) bool {
-	matched, err := regexp.Match(`^[a-zA-Z_]+`, []byte(string(ch)))
+// 判断是否是数字
+func isDigit(ch byte) bool {
+	matched, err := regexp.Match(`[0-9]`, []byte(string(ch)))
 	if err != nil {
 		panic(err)
 	}
 	return matched
+}
+
+// readNumber 从一个有效token开始读取到一个分隔符之前，代表了一个单元，读取数字
+func (l *Lexer) readNumber() string {
+	position := l.position
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.position]
 }
