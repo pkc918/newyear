@@ -32,3 +32,16 @@ const (
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
 )
+
+var keywords = map[string]TokenType{
+	"function": FUNCTION,
+	"let":      LET,
+}
+
+// LookupIdent 通过检查关键字表来判断给定的标识符是否是关键字。如果是，返回关键字的 TokenType 常量。如果不是，但会 token.IDENT
+func LookupIdent(ident string) TokenType {
+	if tok, ok := keywords[ident]; ok {
+		return tok
+	}
+	return IDENT
+}
