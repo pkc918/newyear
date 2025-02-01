@@ -37,11 +37,21 @@ const (
 	// 关键字
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
+	TRUE     = "TRUE"
+	FALSE    = "FALSE"
+	IF       = "IF"
+	ELSE     = "ELSE"
+	RETURN   = "RETURN"
 )
 
 var keywords = map[string]TokenType{
 	"function": FUNCTION,
 	"let":      LET,
+	"true":     TRUE,
+	"false":    FALSE,
+	"if":       IF,
+	"else":     ELSE,
+	"return":   RETURN,
 }
 
 // LookupIdent 通过检查关键字表来判断给定的标识符是否是关键字。如果是，返回关键字的 TokenType 常量。如果不是，但会 token.IDENT
