@@ -1,27 +1,21 @@
 # 🧨 NewYear
 
-NewYear 使用 Go 实现的一个解释器。
+NewYear is an interpreter implemented in the Go programming language.
+It aims to provide a simple and efficient environment for parsing and executing code.
+This projects is designed to help developers understand the fundamental principles of interpreters while offering an extensible framework for future feature enhancements.
 
 
-## ⭐️计划
+## ⭐Aims
 
 - [x] lexical analysis
-- [ ] 语法分析器
-- [ ] 抽象语法树（AST）
-- [ ] 内部对象系统
-- [ ] 求值器
+- [x] REPL
+- [ ] syntactic analysis
+- [ ] AST
+- [ ] CLOS（Common Lisp Object system）
+- [ ] evaluation
 
 
 
-## 👑特性
+## 👑Features
 
-- 类C语法
-- 变量绑定
-- 整型和布尔型
-- 算数表达式
-- 内置函数
-- 头等函数和高阶函数
-- 闭包
-- 字符串数据结构
-- 数组数据结构
-- 哈希数据结构
+- Top-down parsing
