@@ -89,8 +89,7 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 
 // skipWhitespace 跳过空白字符（作为词法单元的分隔符）
 func (l *Lexer) skipWhitespace() {
-	re := regexp.MustCompile(`[ \t\n\r]`)
-	for matched := re.MatchString(string(l.ch)); matched; {
+	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()
 	}
 }
