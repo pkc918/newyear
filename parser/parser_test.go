@@ -16,6 +16,7 @@ let foo = 838383;
 	p := New(l)
 
 	program := p.parseProgram()
+	cheekParserErrors(t, p)
 	if program == nil {
 		t.Fatalf("ParseProgram returned nil")
 	}
@@ -38,6 +39,19 @@ let foo = 838383;
 			return
 		}
 	}
+}
+
+func cheekParserErrors(t *testing.T, p *Parser) {
+	errors := p.Errors()
+	if len(errors) == 0 {
+		return
+	}
+
+	t.Errorf("parser has %d errors", len(errors))
+	for _, msg := range errors {
+		t.Errorf("parser error: %s", msg)
+	}
+	t.FailNow()
 }
 
 func testLetStatement(t *testing.T, stmt ast.Statement, name string) bool {
