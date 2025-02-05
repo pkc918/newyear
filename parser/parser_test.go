@@ -41,6 +41,38 @@ let foo = 838383;
 	}
 }
 
+func TestReturnStatement(t *testing.T) {
+	input := `
+return 5;
+return 2;
+return 3;
+`
+	l := lexer.New(input)
+	p := New(l)
+
+	program := p.parseProgram()
+	cheekParserErrors(t, p)
+	if program == nil {
+		t.Fatalf("ParseProgram returned nil")
+	}
+
+	if len(program.Statements) != 3 {
+		t.Fatalf("program.Statements does not contain 3 statements. got=%d", len(program.Statements))
+	}
+
+	for i, tt := range program.Statements {
+		returnStatement, ok := tt.(*ast.ReturnStatement)
+		if !ok {
+			t.Errorf("Program.Statements[%d] is not a return statement. got=%T", i, tt)
+			continue
+		}
+
+		if returnStatement.TokenLiteral() != "return" {
+			t.Errorf("returnStatement.TokenLiteral not 'return'. got=%q", returnStatement.TokenLiteral())
+		}
+	}
+}
+
 func cheekParserErrors(t *testing.T, p *Parser) {
 	errors := p.Errors()
 	if len(errors) == 0 {
