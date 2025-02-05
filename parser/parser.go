@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"fmt"
 	"github.com/newyear/ast"
 	"github.com/newyear/lexer"
 	"github.com/newyear/token"
@@ -98,4 +99,15 @@ func (p *Parser) peekTokenIs(t token.TokenType) bool {
 // curTokenIs 判断当前token的type是否是 t
 func (p *Parser) curTokenIs(t token.TokenType) bool {
 	return p.curToken.Type == t
+}
+
+// Errors 获取 Parser 收集的 error
+func (p *Parser) Errors() []string {
+	return p.errors
+}
+
+// peekError 收集下一个Token与预期不符的错误
+func (p *Parser) peekError(t token.TokenType) {
+	msg := fmt.Sprintf("expected next token to be %s, got %s", t, p.peekToken.Type)
+	p.errors = append(p.errors, msg)
 }
