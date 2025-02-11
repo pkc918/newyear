@@ -7,6 +7,11 @@ import (
 	"github.com/newyear/token"
 )
 
+type (
+	prefixParseFn func() ast.Expression
+	infixParseFn  func(ast.Expression) ast.Expression
+)
+
 type Parser struct {
 	l *lexer.Lexer
 
@@ -14,6 +19,9 @@ type Parser struct {
 	peekToken token.Token
 
 	errors []string // 收集报错信息
+
+	prefixParseFns map[token.TokenType]prefixParseFn
+	infixParseFns  map[token.TokenType]infixParseFn
 }
 
 func New(l *lexer.Lexer) *Parser {
@@ -125,4 +133,14 @@ func (p *Parser) Errors() []string {
 func (p *Parser) peekError(t token.TokenType) {
 	msg := fmt.Sprintf("expected next token to be %s, got %s", t, p.peekToken.Type)
 	p.errors = append(p.errors, msg)
+}
+
+// registerPrefixParseFn 注册前缀解析函数
+func (p *Parser) registerPrefixParseFn(tokenType token.TokenType, fn prefixParseFn) {
+	p.prefixParseFns[tokenType] = fn
+}
+
+// registerInfixParseFn 注册中缀解析函数
+func (p *Parser) registerInfixParseFn(tokenType token.TokenType, fn infixParseFn) {
+	p.infixParseFns[tokenType] = fn
 }
