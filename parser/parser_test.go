@@ -119,11 +119,11 @@ func TestIdentifierExpression(t *testing.T) {
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
 	if !ok {
-		t.Errorf("program.Statements[0] got %T wanted *ast.ExpressionStatement", stmt)
+		t.Errorf("program.Statements[0] got %T wanted *ast.ExpressionStatement", program.Statements[0])
 	}
 	ident, ok := stmt.Expression.(*ast.Identifier)
 	if !ok {
-		t.Errorf("stmt.Expression got %T wanted *ast.Identifier", stmt)
+		t.Errorf("stmt.Expression got %T wanted *ast.Identifier", stmt.Expression)
 	}
 	if ident.Value != "foobar" {
 		t.Errorf("ident.Value got %s, want foobar", ident.Value)
