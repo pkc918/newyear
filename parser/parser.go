@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+
 	"github.com/newyear/ast"
 	"github.com/newyear/lexer"
 	"github.com/newyear/token"
@@ -27,12 +28,12 @@ type Parser struct {
 const (
 	_ int = iota
 	LOWEST
-	EQUALS
-	LESSGREATER
-	SUM
-	PRODUCT
-	PREFIX
-	CALL
+	EQUALS      // ==
+	LESSGREATER // > or <
+	SUM         // +
+	PRODUCT     // *
+	PREFIX      // -x or !x
+	CALL        // function(x)
 )
 
 func New(l *lexer.Lexer) *Parser {
@@ -41,6 +42,10 @@ func New(l *lexer.Lexer) *Parser {
 	// 读取两个词法单元，相当于初始化 curToken 和 peekToken
 	p.nextToken()
 	p.nextToken()
+
+	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
+	p.registerPrefixParseFn(p.curToken.Type, p.parseIdentifier)
+
 	return p
 }
 
@@ -168,6 +173,18 @@ func (p *Parser) registerInfixParseFn(tokenType token.TokenType, fn infixParseFn
 	p.infixParseFns[tokenType] = fn
 }
 
-func (p *Parser) parseExpression(lowest int) ast.Expression {
-	return nil
+// parseExpression 解析语句
+func (p *Parser) parseExpression(precedence int) ast.Expression {
+	prefix := p.prefixParseFns[p.curToken.Type]
+
+	if prefix == nil {
+		return nil
+	}
+
+	leftParse := prefix()
+	return leftParse
+}
+
+func (p *Parser) parseIdentifier() ast.Expression {
+	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 }
